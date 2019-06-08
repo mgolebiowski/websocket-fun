@@ -1,7 +1,7 @@
 const http = require('http');
 const url = require('url');
 
-const { writeModel, readModel } = require('./ws_init');
+const { post, list } = require('./router');
 
 const server = http.createServer((req, res) => {
     res.end("Hello world!");
@@ -10,12 +10,12 @@ const server = http.createServer((req, res) => {
 server.on('upgrade', function upgrade(request, socket, head) {
     const pathname = url.parse(request.url).pathname;
     if (pathname === '/post') {
-        writeModel.handleUpgrade(request, socket, head, function done(ws) {
-            writeModel.emit('connection', ws, request);
+        post.handleUpgrade(request, socket, head, function done(ws) {
+            post.emit('connection', ws, request);
         });
     } else if (pathname === '/list') {
-        readModel.handleUpgrade(request, socket, head, function done(ws) {
-            readModel.emit('connection', ws, request);
+        list.handleUpgrade(request, socket, head, function done(ws) {
+            list.emit('connection', ws, request);
         });
     } else {
         socket.destroy();
