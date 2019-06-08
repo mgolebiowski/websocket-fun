@@ -1,6 +1,8 @@
 const WebSocket = require('ws');
 const Joi = require('@hapi/joi');
+
 const { write } = require('../domain/repositories/messages');
+const EventBroker = require('../events_broker');
 
 const postRoute = new WebSocket.Server({ noServer: true });
 
@@ -15,6 +17,7 @@ postRoute.on('connection', function connection(ws) {
         if (!result.error) {
             const record = {date: new Date(), ...decodedMessage.message};
             write(record);
+            EventBroker.emit('new_post', JSON.stringify(record));
             ws.send('Message saved!');
         } else {
             ws.send(JSON.stringify(result.error));

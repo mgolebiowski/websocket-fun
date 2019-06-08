@@ -1,9 +1,13 @@
 const WebSocket = require('ws');
 
-const eventsModel = new WebSocket.Server({ noServer: true});
+const EventsBroker = require('../events_broker');
 
-eventsModel.on('connection', function connection(ws) {
+const eventsRoute = new WebSocket.Server({ noServer: true});
 
+eventsRoute.on('connection', function connection(ws) {
+    EventsBroker.on('new_post', (record) => {
+        ws.send(record);
+    });
 });
 
-module.exports = eventsModel;
+module.exports = eventsRoute;
