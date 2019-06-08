@@ -1,10 +1,15 @@
 const http = require('http');
 const url = require('url');
 
+const static = require('node-static');
+
 const { post, list, events } = require('./router');
 
 const server = http.createServer((req, res) => {
-    res.end("Hello world!");
+    req.addListener('end', function () {
+        const file = new static.Server('./client');
+        file.serve(req, res);
+    }).resume();
 });
 
 server.on('upgrade', function upgrade(request, socket, head) {

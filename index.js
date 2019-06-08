@@ -1,3 +1,3 @@
-const server = require('./src/http_init');
+const server = require('./server/http_init');
 
 server.listen(8080);
